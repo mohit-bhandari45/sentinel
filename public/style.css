@@ -1,0 +1,22 @@
+:root { --bg:#0e1116; --panel:#171b22; --line:#262c36; --text:#e6e9ef; --muted:#8b95a5; --critical:#e5484d; --high:#f76b15; --medium:#f5d90a; --low:#3e9bd6; }
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--text); font:14px/1.5 system-ui, sans-serif; }
+header { display:flex; align-items:center; gap:16px; padding:16px 24px; border-bottom:1px solid var(--line); }
+header h1 { margin:0; font-size:18px; } #meta { color:var(--muted); flex:1; }
+.btn { color:var(--text); border:1px solid var(--line); padding:6px 12px; border-radius:6px; text-decoration:none; }
+main { padding:24px; display:grid; gap:16px; max-width:1200px; margin:0 auto; }
+.cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; }
+.card, .panel { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px 16px; }
+.card .n { font-size:28px; font-weight:700; } .card .l { color:var(--muted); text-transform:uppercase; font-size:11px; letter-spacing:.06em; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:16px; }
+h2 { margin:0 0 10px; font-size:14px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; }
+.bar { display:grid; grid-template-columns:200px 1fr 40px; gap:8px; align-items:center; margin:4px 0; }
+.bar .fill { height:8px; background:var(--low); border-radius:4px; }
+.filters { display:flex; gap:8px; margin-bottom:10px; }
+select, input { background:var(--bg); color:var(--text); border:1px solid var(--line); border-radius:6px; padding:6px 10px; }
+table { width:100%; border-collapse:collapse; } th, td { text-align:left; padding:8px; border-bottom:1px solid var(--line); vertical-align:top; }
+th { color:var(--muted); font-weight:600; font-size:12px; }
+.sev { font-weight:700; text-transform:uppercase; font-size:11px; } .sev.critical{color:var(--critical)} .sev.high{color:var(--high)} .sev.medium{color:var(--medium)} .sev.low{color:var(--low)}
+.tag { background:var(--bg); border:1px solid var(--line); border-radius:4px; padding:0 6px; margin-right:4px; font-size:11px; color:var(--muted); }
+.tag.bad { color:var(--critical); border-color:var(--critical); }
+details pre { white-space:pre-wrap; word-break:break-all; background:var(--bg); padding:8px; border-radius:6px; color:var(--muted); font-size:12px; }

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SentinelLite</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header><h1>SentinelLite</h1><span id="meta"></span><a href="/api/report" class="btn">Download report</a></header>
+  <main>
+    <section class="cards" id="cards"></section>
+    <section class="grid">
+      <div class="panel"><h2>ATT&amp;CK techniques</h2><div id="tech"></div></div>
+      <div class="panel"><h2>Top sources</h2><div id="ips"></div></div>
+    </section>
+    <section class="panel">
+      <h2>Alerts</h2>
+      <div class="filters">
+        <select id="sev"><option value="">All severities</option><option>critical</option><option>high</option><option>medium</option><option>low</option></select>
+        <input id="ip" placeholder="Filter by IP" autocomplete="off">
+      </div>
+      <table><thead><tr><th>Score</th><th>Severity</th><th>Rule</th><th>Source</th><th>Events</th><th>First seen (UTC)</th><th>ATT&amp;CK</th></tr></thead><tbody id="rows"></tbody></table>
+    </section>
+  </main>
+</body>
+</html>

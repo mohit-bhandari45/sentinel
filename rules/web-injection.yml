@@ -1,0 +1,46 @@
+- id: web-sqli
+  title: SQL injection attempt
+  description: Request contains SQL injection syntax (UNION SELECT, tautologies, time-based functions, stacked queries).
+  severity: high
+  mitre: { id: T1190, name: Exploit Public-Facing Application }
+  type: match
+  filter: { source: nginx }
+  field: path
+  patterns:
+    - '\bunion\b[\s\S]{0,40}\bselect\b'
+    - '\bor\b\s+[\x27"]?\d+[\x27"]?\s*=\s*[\x27"]?\d+'
+    - 'sleep\s*\(\s*\d+'
+    - 'benchmark\s*\('
+    - 'information_schema'
+    - ';\s*(drop|insert|update|delete)\s'
+  response: Block or challenge the source, confirm queries use parameter binding, and check the database logs for the targeted endpoint.
+
+- id: web-xss
+  title: Cross-site scripting attempt
+  description: Request contains script tags, javascript URIs or inline event handlers.
+  severity: medium
+  mitre: { id: T1190, name: Exploit Public-Facing Application }
+  type: match
+  filter: { source: nginx }
+  field: path
+  patterns:
+    - '<\s*script'
+    - 'javascript:'
+    - '\bon(error|load|mouseover|focus)\s*='
+    - '<\s*img[^>]*\bsrc'
+  response: Verify output encoding on the targeted parameter and review the Content-Security-Policy.
+
+- id: web-path-traversal
+  title: Path traversal attempt
+  description: Request tries to escape the web root using ../ sequences (including encoded forms) or reads system files.
+  severity: high
+  mitre: { id: T1190, name: Exploit Public-Facing Application }
+  type: match
+  filter: { source: nginx }
+  field: path
+  patterns:
+    - '\.\./'
+    - '\.\.\\'
+    - '/etc/(passwd|shadow)'
+    - 'c:\\windows'
+  response: Validate and canonicalize file paths server-side and run the app with least privilege.

@@ -1,0 +1,48 @@
+- id: ssh-bruteforce
+  title: SSH brute-force attempt
+  description: Many failed SSH logins from one source IP in a short window.
+  severity: high
+  mitre: { id: T1110.001, name: Password Guessing }
+  type: threshold
+  filter: { source: ssh, action: failed_login }
+  groupBy: ip
+  count: 10
+  windowSec: 60
+  response: Block the source IP, enforce key-only SSH authentication, and deploy fail2ban or equivalent.
+
+- id: ssh-password-spray
+  title: SSH password spraying
+  description: One source tries a few passwords against many different accounts, staying under per-account lockouts.
+  severity: high
+  mitre: { id: T1110.003, name: Password Spraying }
+  type: threshold
+  filter: { source: ssh, action: failed_login }
+  groupBy: ip
+  distinct: user
+  count: 5
+  windowSec: 120
+  response: Block the source, check whether any targeted account later logged in successfully, and enforce MFA.
+
+- id: ssh-compromise
+  title: SSH login succeeded after repeated failures
+  description: Several failed logins from an IP were followed by a successful login, which suggests the account was guessed.
+  severity: critical
+  mitre: { id: T1078, name: Valid Accounts }
+  type: sequence
+  groupBy: ip
+  first: { source: ssh, action: failed_login }
+  then: { source: ssh, action: login_success }
+  count: 5
+  windowSec: 300
+  response: Treat the account as compromised. Kill its sessions, rotate credentials and keys, and review the shell history and commands it ran.
+
+- id: ssh-root-login
+  title: Direct root login over SSH
+  description: A successful SSH login as root. Root login should be disabled in favour of named accounts with sudo.
+  severity: medium
+  mitre: { id: T1078.003, name: Local Accounts }
+  type: match
+  filter: { source: ssh, action: login_success }
+  field: user
+  patterns: ['^root$']
+  response: Set PermitRootLogin no, and confirm this login was expected.

@@ -1,0 +1,51 @@
+- id: web-sensitive-files
+  title: Probe for sensitive files
+  description: Requests for secrets, VCS metadata, keys or backups that should never be web-accessible.
+  severity: high
+  mitre: { id: T1552.001, name: Credentials In Files }
+  type: match
+  filter: { source: nginx }
+  field: path
+  patterns:
+    - '/\.env\b'
+    - '/\.git(/|$)'
+    - 'wp-config'
+    - '/\.aws/'
+    - 'id_rsa'
+    - '/backup\.(zip|sql|tar|gz)'
+  response: Confirm none of these paths are served, rotate any secret that may have been exposed, and block the source.
+
+- id: web-scanner-ua
+  title: Known scanner user-agent
+  description: User-agent string belongs to a well-known vulnerability scanner or attack tool.
+  severity: medium
+  mitre: { id: T1595.002, name: Vulnerability Scanning }
+  type: match
+  filter: { source: nginx }
+  field: ua
+  patterns: ['sqlmap', 'nikto', 'nmap', 'masscan', 'dirbuster', 'gobuster', 'wpscan', 'zgrab', 'nuclei']
+  response: Block the user-agent at the WAF and treat this source as hostile for the rest of the review.
+
+- id: web-404-burst
+  title: Burst of 404 responses (content discovery)
+  description: Many not-found responses to one source in a minute, typical of directory brute-forcing.
+  severity: medium
+  mitre: { id: T1595.003, name: Wordlist Scanning }
+  type: threshold
+  filter: { source: nginx, status: [404] }
+  groupBy: ip
+  count: 20
+  windowSec: 60
+  response: Rate-limit or block the source and check whether any probed path returned 200.
+
+- id: web-credential-stuffing
+  title: Credential stuffing against login
+  description: Large number of failed login responses (401) from one source.
+  severity: high
+  mitre: { id: T1110.004, name: Credential Stuffing }
+  type: threshold
+  filter: { source: nginx, status: [401], path: '^/login' }
+  groupBy: ip
+  count: 15
+  windowSec: 60
+  response: Add rate limiting and CAPTCHA on login, enable MFA, and force resets for any account that logged in from this source.

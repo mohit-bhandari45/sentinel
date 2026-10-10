@@ -1,0 +1,26 @@
+{
+  "name": "sentinel-lite",
+  "version": "1.0.0",
+  "description": "Mini SIEM: log parsing, MITRE ATT&CK-mapped detection rules, alert scoring, dashboard and reports",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=20.11" },
+  "scripts": {
+    "sentinel": "tsx src/cli.ts",
+    "simulate": "tsx src/cli.ts simulate --out logs",
+    "analyze": "tsx src/cli.ts analyze logs/auth.log logs/access.log",
+    "serve": "tsx src/cli.ts serve logs/auth.log logs/access.log",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test test/*.test.ts"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "tsx": "^4.19.0",
+    "yaml": "^2.5.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0"
+  }
+}
